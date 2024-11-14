@@ -10,3 +10,5 @@ The Brute force approach tries out all the possible solutions and chooses the de
 * It keeps on enetring suiting numbers until at one point either the puzzle is solved or no number can satisfy the condition 
 * Then it changes numbers as it backtracks until the whole board is completed, this can happen multiple times 
 * After all tries if none of the number works teh puzzle is unsolvable. 
+
+![image](https://github.com/user-attachments/assets/3c94647e-d3ea-4136-b40d-f41f6e314671)
