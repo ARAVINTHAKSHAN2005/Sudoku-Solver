@@ -64,14 +64,14 @@ def solve_sudoku(board):
         if is_valid(board, i, (row, col)):
             board[row][col] = i
             draw_board(board, current_cell=(row, col))
-            pygame.time.delay(100)  # Delay for visualization
+            pygame.time.delay(10)  # Delay for visualization
 
             if solve_sudoku(board):
                 return True
 
             board[row][col] = 0
             draw_board(board, backtrack_cell=(row, col))
-            pygame.time.delay(100)  # Delay for visualization
+            pygame.time.delay(10)  # Delay for visualization
 
     return False
 
@@ -116,6 +116,7 @@ def main():
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print("Solved Board !")
                 run = False
 
     pygame.quit()
