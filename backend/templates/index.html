@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudoku Backtracking Visualizer</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen">
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-xl">
+    <h1 class="text-2xl font-bold mb-4">Sudoku Backtracking Visualizer</h1>
+    <div class="grid grid-cols-9 gap-1 mb-4" id="sudoku-board"></div>
+    <button id="solve-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+      Solve Sudoku
+    </button>
+  </div>
+  <script>
+    const sudokuBoard = document.getElementById('sudoku-board');
+    const solveButton = document.getElementById('solve-button');
+
+    // Initialize the Sudoku board
+    const initBoard = (puzzle) => {
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          const cell = document.createElement('div');
+          cell.classList.add('sudoku-cell', 'border', 'border-gray-400', 'text-center', 'text-2xl', 'font-bold', 'hover:bg-gray-200', 'transition-colors', 'duration-200');
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          cell.textContent = puzzle[i][j] === -1 ? '-' : puzzle[i][j].toString();
+          sudokuBoard.appendChild(cell);
+        }
+      }
+    };
+
+    // Handle user input on the Sudoku board
+    sudokuBoard.addEventListener('click', (event) => {
+      if (event.target.classList.contains('sudoku-cell')) {
+        const row = parseInt(event.target.dataset.row);
+        const col = parseInt(event.target.dataset.col);
+        // Add logic to handle user input and update the board
+      }
+    });
+
+    // Solve the Sudoku puzzle
+    solveButton.addEventListener('click', async () => {
+      const cells = sudokuBoard.querySelectorAll('.sudoku-cell');
+      const puzzle = [];
+      cells.forEach((cell) => {
+        const value = cell.textContent === '-' ? -1 : parseInt(cell.textContent);
+        puzzle.push(value);
+      });
+
+      try {
+        const response = await fetch('/solve', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(puzzle),
+        });
+
+        if (response.ok) {
+          const solvedPuzzle = await response.json();
+          updateBoard(solvedPuzzle);
+        } else {
+          const error = await response.json();
+          console.error(error.error);
+        }
+      } catch (error) {
+        console.error('Error solving Sudoku:', error);
+      }
+    });
+
+    const updateBoard = (puzzle) => {
+      const cells = sudokuBoard.querySelectorAll('.sudoku-cell');
+      cells.forEach((cell, index) => {
+        cell.textContent = puzzle[Math.floor(index / 9)][index % 9] === -1 ? '-' : puzzle[Math.floor(index / 9)][index % 9].toString();
+      });
+    };
+
+    // Initialize the board with the example puzzle
+    initBoard({{ example_board|tojson }});
+  </script>
+</body>
+</html>
